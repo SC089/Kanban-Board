@@ -8,18 +8,21 @@ export const login = async (req: Request, res: Response) => {
   const { username, password } = req.body;
 
   if (!username || !password ) {
-    return res.status(400).json({ message: 'Username and password are required' });
+    res.status(400).json({ message: 'Username and password are required' });
+    return;
   }
 
   try {
     const user = await User.findOne({ where: { username } });
     if (!user) {
-      return res.status(401).json({ message: 'Invalid username or password' });
+      res.status(401).json({ message: 'Invalid username or password' });
+     return;
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return res.status(401).json({ message: 'Invalid username or password' });
+      res.status(401).json({ message: 'Invalid username or password' });
+      return;
     }
 
     const secretKey = process.env.JWT_SECRET_KEY || 'secretkey';

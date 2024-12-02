@@ -20,8 +20,12 @@ const Login = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      const data = await login(loginData);
-      Auth.login(data.token);
+      const token = await login(loginData);
+      if (token) {
+        Auth.login(token);
+      } else {
+        console.error('Login failed: No token recieved');
+      }
     } catch (err) {
       console.error('Failed to login', err);
     }
